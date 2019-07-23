@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include<math.h>
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -9,8 +10,10 @@
 
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks);
 void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawCurve();
 void drawPencil();
 void drawTowerBlock();
+void drawRoadsidePoles();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -71,6 +74,7 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 	
 	glRotatef(0.05, 1, 1, 1);
+
 	glPushMatrix();
 		glTranslatef(-250, 0, 0);
 		drawTowerBlock();
@@ -80,6 +84,17 @@ void display()
 		glTranslatef(250, 0, 0);
 		drawTowerBlock();
 	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(300, 0, -50);
+		drawRoadsidePoles();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(300, 0, 50);
+		drawRoadsidePoles();
+	glPopMatrix();
+
 
 }
 //--------------------------------------------------------------------
@@ -138,6 +153,19 @@ void drawLine(float lineWidth, float x1, float y1, float x2, float y2) {
 	glBegin(GL_LINE);
 	glVertex2f(x1, y1);
 	glVertex2f(x2, y2);
+	glEnd();
+}
+void drawCurve() {
+	float radiusSmile = 400;
+	float twoPI = 2 * 3.142;
+
+	glPointSize(10.0);
+	glBegin(GL_POINTS);
+	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);//red
+	for (float i = twoPI / 4; i <= 3 * twoPI / 4; i += 0.001)
+	{
+		glVertex2f((sin(i)*radiusSmile), (cos(i)*radiusSmile) + -0.1);
+	}
 	glEnd();
 }
 
@@ -214,6 +242,38 @@ void drawTowerBlock() {
 			drawCylinder(50, 50, 100, 30, 30);
 		glPopMatrix();
 
+}
+
+void drawRoadsidePoles() {
+	double baseRadius = 10;
+	double topRadius = 10;
+	double cylinderHeight = 200;
+	int slices = 30;
+	int stacks = 30;
+
+	glPushMatrix();
+		glTranslatef(50, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(100, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-50, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(150, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-100, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(400, 400, 0);
+		drawCurve();
+	glPopMatrix();
+	
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
