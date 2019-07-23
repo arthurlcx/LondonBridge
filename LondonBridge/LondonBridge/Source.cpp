@@ -8,7 +8,7 @@
 #define WINDOW_TITLE "OpenGL Window"
 
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks);
-void drawQuad(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
 void drawPencil();
 void drawTowerBlock();
 
@@ -69,12 +69,17 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	
+	glRotatef(0.05, 1, 1, 1);
+	glPushMatrix();
+		glTranslatef(-250, 0, 0);
+		drawTowerBlock();
+	glPopMatrix();
 
-glRotatef(0.05, 1, 1, 1);
-	
-	//drawPencil();
-	
-	drawTowerBlock();
+	glPushMatrix();
+		glTranslatef(250, 0, 0);
+		drawTowerBlock();
+	glPopMatrix();
 
 }
 //--------------------------------------------------------------------
@@ -92,7 +97,7 @@ void drawCone(double baseRadius, double height, int slices, int stacks) {
 	gluCylinder(cone, baseRadius, 0, height, slices, stacks);
 	gluDeleteQuadric(cone);
 }
-void drawQuad(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
+void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
 	glBegin(GL_QUADS);
 	//Face 1
 	glColor3f(1.0, 0.0, 0.0);
@@ -160,13 +165,13 @@ void drawPencil() {
 
 void drawTowerBlock() {
 		//tower
-		drawQuad(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
+		drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
 		//tower dome
-		drawQuad(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
+		drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
 		//tower roof cube front
-		drawQuad(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
+		drawCuboid(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
 		//tower roof cube side
-		drawQuad(-50, 350, 25, -50, 350, -25, -50, 325, 25, -50, 325, -25);
+		drawCuboid(-50, 350, 25, -50, 350, -25, -50, 325, 25, -50, 325, -25);
 
 		//pencil top left
 		glPushMatrix();
@@ -193,7 +198,7 @@ void drawTowerBlock() {
 		glPopMatrix();
 
 		//tower base
-		drawQuad(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
+		drawCuboid(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
 
 		//tower base cyclinder platform front
 		glPushMatrix();
