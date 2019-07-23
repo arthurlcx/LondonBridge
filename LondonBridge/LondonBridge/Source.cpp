@@ -9,6 +9,7 @@
 
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks);
 void dawQuad(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawPencil();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -27,6 +28,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+
 }
 //--------------------------------------------------------------------
 
@@ -67,17 +69,14 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	glRotatef(0.05f, 1.0f, 0.0f, 0.0f);
+	drawPencil();
 
-	//drawCylinder(10, 10, 350, 30, 30);
-
-	dawQuad(-10, 370, 10, -10, 370, -10, -50, 370, -50, -50, 370, 50);
 }
 //--------------------------------------------------------------------
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks) {
 	GLUquadricObj *cylinder = NULL;
 	cylinder = gluNewQuadric();
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluQuadricDrawStyle(cylinder, GLU_FILL);
 	gluCylinder(cylinder, baseRadius, topRadius, height, slices, stacks);
 	gluDeleteQuadric(cylinder);
 }
@@ -130,6 +129,27 @@ void drawLine(float lineWidth, float x1, float y1, float x2, float y2) {
 	glVertex2f(x1, y1);
 	glVertex2f(x2, y2);
 	glEnd();
+}
+
+void drawPencil() {
+	double baseRadius = 10;
+	double topRadius = 10;
+	double cylinderHeight = 350;
+	double coneHeight = 20;
+	int slices = 30;
+	int stacks = 30;
+
+	glPushMatrix();
+		glTranslatef(0, 350, 0);
+		glRotatef(90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(0, 350, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCone(baseRadius, coneHeight, slices, stacks);
+	glPopMatrix();
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
