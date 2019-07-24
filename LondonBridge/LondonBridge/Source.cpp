@@ -2,9 +2,11 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include<math.h>
+#include<iostream>
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
+#pragma warning(disable:4996)
 
 #define WINDOW_TITLE "OpenGL Window"
 
@@ -14,6 +16,90 @@ void drawCurve();
 void drawPencil();
 void drawTowerBlock();
 void drawRoadsidePoles();
+
+int num_texture = -1;
+
+GLuint texture = 0;
+BITMAP BMP;
+HBITMAP hBMP = NULL;
+
+GLuint texRailing, texRoofCube, texLinkBridge, texRoad, texTower, texTowerBase;
+
+//int LoadBitmapImage(const char *filename)
+//{
+//	int i, j = 0;
+//	FILE *I_file;
+//	unsigned char *I_texture;
+//
+//	BITMAPFILEHEADER fileheader;
+//	BITMAPINFOHEADER infoheader;
+//	RGBTRIPLE rgb;
+//
+//	num_texture++;
+//
+//
+//	if ((I_file = fopen(filename, "rb")) == NULL)return (-1);
+//	fread(&fileheader, sizeof(fileheader), 1, I_file);
+//	fseek(I_file, sizeof(fileheader), SEEK_SET);
+//	fread(&infoheader, sizeof(infoheader), 1, I_file);
+//
+//	I_texture = (byte*)malloc(infoheader.biWidth*infoheader.biHeight * 4);
+//	//	printf("loadhere");
+//	memset(I_texture, 0, infoheader.biWidth*infoheader.biHeight * 4);
+//
+//	for (i = 0; i < infoheader.biWidth*infoheader.biHeight; i++)
+//	{
+//		fread(&rgb, sizeof(rgb), 1, I_file);
+//
+//		I_texture[j + 0] = rgb.rgbtRed;
+//		I_texture[j + 1] = rgb.rgbtGreen;
+//		I_texture[j + 2] = rgb.rgbtBlue;
+//		I_texture[j + 3] = 255;
+//		j += 4;
+//	}
+//	fclose(I_file);
+//
+//	glBindTexture(GL_TEXTURE_2D, num_texture);
+//
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+//
+//	//glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,  GL_LINEAR);
+//	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//	glTexImage2D(GL_TEXTURE_2D, 0, 4, infoheader.biWidth, infoheader.biHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, I_texture);
+//	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, infoheader.biWidth, infoheader.biHeight, GL_RGBA, GL_UNSIGNED_BYTE, I_texture);
+//
+//	free(I_texture);
+//	return (num_texture);
+//	return 0;
+//}
+
+int LoadBitmapImage(const char *filename) {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+	glTexCoord2f(0.0f, 0.0f);
+}
+
+void func()
+{
+	texRailing = LoadBitmapImage("images/railing.bmp");
+	texRoofCube = LoadBitmapImage("images/domewindow.bmp");
+	texLinkBridge = LoadBitmapImage("images/linkbridge.bmp");
+
+
+	texRoad = LoadBitmapImage("images/street.bmp");
+
+	texTower = LoadBitmapImage("images/towerwaterface.bmp");
+	texTowerBase = LoadBitmapImage("images/towerbasepoly.bmp");
+
+}
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -115,31 +201,26 @@ void drawCone(double baseRadius, double height, int slices, int stacks) {
 void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
 	glBegin(GL_QUADS);
 	//Face 1
-	glColor3f(1.0, 0.0, 0.0);
 	glVertex3f(topLeftX, topLeftY, topLeftZ);
 	glVertex3f(botLeftX, botLeftY, botLeftZ);
 	glVertex3f(botRightX, botRightY, botRightZ);
 	glVertex3f(topRightX, topRightY, topRightZ);
 	//Face 2
-	glColor3f(0.0, 1.0, 0.0);
 	glVertex3f(topLeftX, topLeftY, topLeftZ);
 	glVertex3f(botLeftX, botLeftY, botLeftZ);
 	glVertex3f(-botLeftX, botLeftY, botLeftZ);
 	glVertex3f(-topLeftX, topLeftY, topLeftZ);
 	//Face 3
-	glColor3f(0.0, 0.0, 1.0);
 	glVertex3f(-topLeftX, topLeftY, topLeftZ);
 	glVertex3f(-botLeftX, botLeftY, botLeftZ);
 	glVertex3f(-botRightX, botRightY, botRightZ);
 	glVertex3f(-topRightX, topRightY, topRightZ);
 	//Face 4
-	glColor3f(1.0, 1.0, 0.0);
 	glVertex3f(-topRightX, topRightY, topRightZ);
 	glVertex3f(-botRightX, botRightY, botRightZ);
 	glVertex3f(botRightX, botRightY, botRightZ);
 	glVertex3f(topRightX, topRightY, topRightZ);
 	//Face 5
-	glColor3f(1.0, 0.0, 1.0);
 	glVertex3f(topRightX, topRightY, topRightZ);
 	glVertex3f(topLeftX, topLeftY, topLeftZ);
 	glVertex3f(-topLeftX, topLeftY, topLeftZ);
@@ -192,8 +273,14 @@ void drawPencil() {
 }
 
 void drawTowerBlock() {
+
+		
 		//tower
-		drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
+		glPushMatrix();
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
+		glPopMatrix();
 		//tower dome
 		drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
 		//tower roof cube front
