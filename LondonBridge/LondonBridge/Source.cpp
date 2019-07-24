@@ -10,10 +10,15 @@
 
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks);
 void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawLine();
 void drawCurve();
 void drawPencil();
 void drawTowerBlock();
 void drawRoadsidePoles();
+void drawBridge();
+void drawRoad();
+
+float rotateAngle = 0.0f;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -25,6 +30,18 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) PostQuitMessage(0);
+		else if (wParam == 0x4F) //O key
+		{
+			if (rotateAngle >= 0.0f && rotateAngle < 60.0f) {
+				rotateAngle += 1.0f;
+			}
+		}
+		else if (wParam == 0x43) //C key
+		{
+			if (rotateAngle > 0.0f && rotateAngle <= 60.0f) {
+				rotateAngle -= 1.0f;
+			}
+		}
 		break;
 
 	default:
@@ -95,7 +112,45 @@ void display()
 		drawRoadsidePoles();
 	glPopMatrix();
 
+	glPushMatrix();
+		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+		glTranslatef(300, 0, -50);
+		drawRoadsidePoles();
+	glPopMatrix();
 
+	glPushMatrix();
+		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+		glTranslatef(300, 0, 50);
+		drawRoadsidePoles();
+	glPopMatrix();
+
+	//Left Bridge
+	glPushMatrix();
+		glTranslatef(-200.0f, 0.0f, 0.0f);
+		glRotatef(rotateAngle, 0.0f, 0.0f, 1.0f);
+		drawBridge();
+	glPopMatrix();
+
+	//Right Bridge
+	glPushMatrix();
+		glTranslatef(200.0f, 0.0f, 0.0f);
+		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+		glRotatef(rotateAngle, 0.0f, 0.0f, 1.0f);
+		drawBridge();
+	glPopMatrix();
+
+	//Right Road
+	glPushMatrix();
+		glTranslatef(500.0f, 0.0f, 0.0f);
+		drawRoad();
+	glPopMatrix();
+
+	//Left Road
+	glPushMatrix();
+		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+		glTranslatef(500.0f, 0.0f, 0.0f);
+		drawRoad();
+	glPopMatrix();
 }
 //--------------------------------------------------------------------
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks) {
@@ -145,14 +200,14 @@ void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX,
 	glVertex3f(-topLeftX, topLeftY, topLeftZ);
 	glVertex3f(-topRightX, topRightY, topRightZ);
 
-
 	glEnd();
 }
-void drawLine(float lineWidth, float x1, float y1, float x2, float y2) {
-	glLineWidth(lineWidth);
+void drawLine() {
+	glLineWidth(10);
 	glBegin(GL_LINE);
-	glVertex2f(x1, y1);
-	glVertex2f(x2, y2);
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(250, 325,-50);
+	glVertex3f(700, 0.0, -50);
 	glEnd();
 }
 void drawCurve() {
@@ -273,7 +328,27 @@ void drawRoadsidePoles() {
 		glTranslatef(400, 400, 0);
 		drawCurve();
 	glPopMatrix();
+
+	//glPushMatrix();
+	//	//glTranslatef(400, 400, 0);
+	//	drawLine();
+	//glPopMatrix();
 	
+	
+}
+
+void drawBridge() {
+	//drawCuboid(-100.0f, 5.0f, 50.0f, -100.0f, 5.0f, -50.0f, -100.0f, 0.0f, 50.0f, -100.0f, 0.0f, -50.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(0.0f, 5.0f, 50.0f);
+	glVertex3f(0.0f, 5.0f, -50.f);
+	glVertex3f(200.0f, 5.0f, -50.0f);
+	glVertex3f(200.0f, 5.0f, 50.0f);
+	glEnd();
+}
+
+void drawRoad() {
+	drawCuboid(-200.0f, 5.0f, 50.0f, -200.0f, 5.0f, -50.0f, -200.0f, 0.0f, 50.0f, -200.0f, 0.0f, -50.0f);
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
