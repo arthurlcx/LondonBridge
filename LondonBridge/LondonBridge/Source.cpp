@@ -159,25 +159,41 @@ void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX,
 		glVertex3f(topRightX, topRightY, topRightZ);
 
 	//Face 2
-	glVertex3f(topLeftX, topLeftY, topLeftZ);
-	glVertex3f(botLeftX, botLeftY, botLeftZ);
-	glVertex3f(-botLeftX, botLeftY, botLeftZ);
-	glVertex3f(-topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(0, 1);
+		glVertex3f(topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(0, 0);
+		glVertex3f(botLeftX, botLeftY, botLeftZ);
+	glTexCoord2f(1, 0);	
+		glVertex3f(-botLeftX, botLeftY, botLeftZ);
+	glTexCoord2f(1, 1);
+		glVertex3f(-topLeftX, topLeftY, topLeftZ);
 	//Face 3
-	glVertex3f(-topLeftX, topLeftY, topLeftZ);
-	glVertex3f(-botLeftX, botLeftY, botLeftZ);
-	glVertex3f(-botRightX, botRightY, botRightZ);
-	glVertex3f(-topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 1);
+		glVertex3f(-topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(0, 0);
+		glVertex3f(-botLeftX, botLeftY, botLeftZ);
+	glTexCoord2f(1, 0);
+		glVertex3f(-botRightX, botRightY, botRightZ);
+	glTexCoord2f(1, 1);
+		glVertex3f(-topRightX, topRightY, topRightZ);
 	//Face 4
-	glVertex3f(-topRightX, topRightY, topRightZ);
-	glVertex3f(-botRightX, botRightY, botRightZ);
-	glVertex3f(botRightX, botRightY, botRightZ);
-	glVertex3f(topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 1);
+		glVertex3f(-topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 0);
+		glVertex3f(-botRightX, botRightY, botRightZ);
+	glTexCoord2f(1, 0);
+		glVertex3f(botRightX, botRightY, botRightZ);
+	glTexCoord2f(1, 1);
+		glVertex3f(topRightX, topRightY, topRightZ);
 	//Face 5
-	glVertex3f(topRightX, topRightY, topRightZ);
-	glVertex3f(topLeftX, topLeftY, topLeftZ);
-	glVertex3f(-topLeftX, topLeftY, topLeftZ);
-	glVertex3f(-topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 1);
+		glVertex3f(topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 0);
+		glVertex3f(topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(1, 0);
+		glVertex3f(-topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(1, 1);
+		glVertex3f(-topRightX, topRightY, topRightZ);
 
 
 	glEnd();
@@ -230,17 +246,32 @@ void drawTowerBlock() {
 		
 		//tower
 		glPushMatrix();
+			glColor3f(1.0, 1.0, 1.0);
 			glEnable(GL_TEXTURE_2D);
 			LoadBitmapImage("images/towerwaterface.bmp");
 			drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
 			endTexture();
 		glPopMatrix();
 		//tower dome
-		drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
+		glPushMatrix();
+			drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
+		glPopMatrix();
 		//tower roof cube front
-		drawCuboid(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
+		glPushMatrix();
+			glColor3f(1.0, 1.0, 1.0);
+			glEnable(GL_TEXTURE_2D);
+			LoadBitmapImage("images/domewindow.bmp");
+			drawCuboid(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
+			endTexture();
+		glPopMatrix();
 		//tower roof cube side
-		drawCuboid(-50, 350, 25, -50, 350, -25, -50, 325, 25, -50, 325, -25);
+		glPushMatrix();
+			glColor3f(1.0, 1.0, 1.0);
+			glEnable(GL_TEXTURE_2D);
+			LoadBitmapImage("images/domewindow.bmp");
+			drawCuboid(-50, 350, 25, -50, 350, -25, -50, 325, 25, -50, 325, -25);
+			endTexture();
+		glPopMatrix();
 
 		//pencil top left
 		glPushMatrix();
@@ -267,7 +298,13 @@ void drawTowerBlock() {
 		glPopMatrix();
 
 		//tower base
-		drawCuboid(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
+		glPushMatrix();
+			glColor3f(1.0, 1.0, 1.0);
+			glEnable(GL_TEXTURE_2D);
+			LoadBitmapImage("images/towerbasepoly.bmp");
+			drawCuboid(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
+			endTexture();
+		glPopMatrix();
 
 		//tower base cyclinder platform front
 		glPushMatrix();
