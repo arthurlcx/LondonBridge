@@ -20,6 +20,10 @@ void drawRoad();
 
 float rotateAngle = 0.0f;
 
+GLuint texture = 0;
+BITMAP BMP;
+HBITMAP hBMP = NULL;
+
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -84,6 +88,26 @@ bool initPixelFormat(HDC hdc)
 	}
 }
 //--------------------------------------------------------------------
+
+void LoadBitmapImage (const char *filename) {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+}
+
+void endTexture() {
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
 
 void display()
 {
@@ -170,11 +194,14 @@ void drawCone(double baseRadius, double height, int slices, int stacks) {
 void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
 	glBegin(GL_QUADS);
 	//Face 1
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(topLeftX, topLeftY, topLeftZ);
-	glVertex3f(botLeftX, botLeftY, botLeftZ);
-	glVertex3f(botRightX, botRightY, botRightZ);
-	glVertex3f(topRightX, topRightY, topRightZ);
+	glTexCoord2f(0, 1);
+		glVertex3f(topLeftX, topLeftY, topLeftZ);
+	glTexCoord2f(0, 0);
+		glVertex3f(botLeftX, botLeftY, botLeftZ);
+	glTexCoord2f(1, 0);
+		glVertex3f(botRightX, botRightY, botRightZ);
+	glTexCoord2f(1, 1);
+		glVertex3f(topRightX, topRightY, topRightZ);
 	//Face 2
 	glTexCoord2f(0, 1);
 		glVertex3f(topLeftX, topLeftY, topLeftZ);

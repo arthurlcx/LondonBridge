@@ -19,4 +19,54 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\domewindow.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environside1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environside2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environside3.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environside4.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environsky.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\environwater.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\linkbridge.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\railing.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\roadtowercol.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\street.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\towerbasepoly.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\towercolpil.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\towercolpoly.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\towerroadface.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\towerwaterface.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

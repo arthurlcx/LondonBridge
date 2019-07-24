@@ -117,6 +117,24 @@
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\domewindow.bmp" />
+    <Image Include="images\environside1.bmp" />
+    <Image Include="images\environside2.bmp" />
+    <Image Include="images\environside3.bmp" />
+    <Image Include="images\environside4.bmp" />
+    <Image Include="images\environsky.bmp" />
+    <Image Include="images\environwater.bmp" />
+    <Image Include="images\linkbridge.bmp" />
+    <Image Include="images\railing.bmp" />
+    <Image Include="images\roadtowercol.bmp" />
+    <Image Include="images\street.bmp" />
+    <Image Include="images\towerbasepoly.bmp" />
+    <Image Include="images\towercolpil.bmp" />
+    <Image Include="images\towercolpoly.bmp" />
+    <Image Include="images\towerroadface.bmp" />
+    <Image Include="images\towerwaterface.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
