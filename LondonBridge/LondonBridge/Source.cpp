@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include<math.h>
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -8,7 +9,11 @@
 #define WINDOW_TITLE "OpenGL Window"
 
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks);
-void dawQuad(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ);
+void drawCurve();
+void drawPencil();
+void drawTowerBlock();
+void drawRoadsidePoles();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -27,6 +32,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+
 }
 //--------------------------------------------------------------------
 
@@ -66,18 +72,36 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	
+	glRotatef(0.05, 1, 1, 1);
 
-	glRotatef(0.05f, 1.0f, 0.0f, 0.0f);
+	glPushMatrix();
+		glTranslatef(-250, 0, 0);
+		drawTowerBlock();
+	glPopMatrix();
 
-	//drawCylinder(10, 10, 350, 30, 30);
+	glPushMatrix();
+		glTranslatef(250, 0, 0);
+		drawTowerBlock();
+	glPopMatrix();
 
-	dawQuad(-10, 370, 10, -10, 370, -10, -50, 370, -50, -50, 370, 50);
+	glPushMatrix();
+		glTranslatef(300, 0, -50);
+		drawRoadsidePoles();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(300, 0, 50);
+		drawRoadsidePoles();
+	glPopMatrix();
+
+
 }
 //--------------------------------------------------------------------
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks) {
 	GLUquadricObj *cylinder = NULL;
 	cylinder = gluNewQuadric();
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluQuadricDrawStyle(cylinder, GLU_FILL);
 	gluCylinder(cylinder, baseRadius, topRadius, height, slices, stacks);
 	gluDeleteQuadric(cylinder);
 }
@@ -88,7 +112,7 @@ void drawCone(double baseRadius, double height, int slices, int stacks) {
 	gluCylinder(cone, baseRadius, 0, height, slices, stacks);
 	gluDeleteQuadric(cone);
 }
-void dawQuad(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
+void drawCuboid(float topLeftX, float topLeftY, float topLeftZ, float topRightX, float topRightY, float topRightZ, float botLeftX, float botLeftY, float botLeftZ, float botRightX, float botRightY, float botRightZ) {
 	glBegin(GL_QUADS);
 	//Face 1
 	glColor3f(1.0, 0.0, 0.0);
@@ -130,6 +154,126 @@ void drawLine(float lineWidth, float x1, float y1, float x2, float y2) {
 	glVertex2f(x1, y1);
 	glVertex2f(x2, y2);
 	glEnd();
+}
+void drawCurve() {
+	float radiusSmile = 400;
+	float twoPI = 2 * 3.142;
+
+	glPointSize(10.0);
+	glBegin(GL_POINTS);
+	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);//red
+	for (float i = twoPI / 4; i <= 3 * twoPI / 4; i += 0.001)
+	{
+		glVertex2f((sin(i)*radiusSmile), (cos(i)*radiusSmile) + -0.1);
+	}
+	glEnd();
+}
+
+void drawPencil() {
+	double baseRadius = 10;
+	double topRadius = 10;
+	double cylinderHeight = 350;
+	double coneHeight = 20;
+	int slices = 30;
+	int stacks = 30;
+
+	glPushMatrix();
+		glTranslatef(0, 350, 0);
+		glRotatef(90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(0, 350, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCone(baseRadius, coneHeight, slices, stacks);
+	glPopMatrix();
+
+}
+
+void drawTowerBlock() {
+		//tower
+		drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
+		//tower dome
+		drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
+		//tower roof cube front
+		drawCuboid(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
+		//tower roof cube side
+		drawCuboid(-50, 350, 25, -50, 350, -25, -50, 325, 25, -50, 325, -25);
+
+		//pencil top left
+		glPushMatrix();
+			glTranslatef(-50, 0, -50);
+			drawPencil();
+		glPopMatrix();
+
+		//pencil top right
+		glPushMatrix();
+			glTranslatef(-50, 0, 50);
+			drawPencil();
+		glPopMatrix();
+
+		//pencil bottom left
+		glPushMatrix();
+			glTranslatef(50, 0, -50);
+			drawPencil();
+		glPopMatrix();
+
+		//pencil bottom left
+		glPushMatrix();
+			glTranslatef(50, 0, 50);
+			drawPencil();
+		glPopMatrix();
+
+		//tower base
+		drawCuboid(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
+
+		//tower base cyclinder platform front
+		glPushMatrix();
+			glTranslatef(0, 0, -50);
+			glRotatef(90, 1, 0, 0);
+			drawCylinder(50, 50, 100, 30, 30);
+		glPopMatrix();
+
+		//tower base cyclinder platform back
+		glPushMatrix();
+			glTranslatef(0, 0, 50);
+			glRotatef(90, 1, 0, 0);
+			drawCylinder(50, 50, 100, 30, 30);
+		glPopMatrix();
+
+}
+
+void drawRoadsidePoles() {
+	double baseRadius = 10;
+	double topRadius = 10;
+	double cylinderHeight = 200;
+	int slices = 30;
+	int stacks = 30;
+
+	glPushMatrix();
+		glTranslatef(50, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(100, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-50, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(150, 0, 0);
+		glRotatef(-90, 1, 0, 0);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-100, slices, stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(400, 400, 0);
+		drawCurve();
+	glPopMatrix();
+	
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
