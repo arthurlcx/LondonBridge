@@ -100,6 +100,7 @@ void LoadBitmapImage (const char *filename) {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 }
 
@@ -116,32 +117,38 @@ void display()
 
 	glRotatef(0.05, 1, 1, 1);
 
+	//left tower
 	glPushMatrix();
 		glTranslatef(-250, 0, 0);
 		drawTowerBlock();
 	glPopMatrix();
 
+	//right tower
 	glPushMatrix();
 		glTranslatef(250, 0, 0);
 		drawTowerBlock();
 	glPopMatrix();
 
+	//right roadside pole BACK
 	glPushMatrix();
 		glTranslatef(300, 0, -50);
 		drawRoadsidePoles();
 	glPopMatrix();
 
+	//right roadside pole FRONT
 	glPushMatrix();
 		glTranslatef(300, 0, 50);
 		drawRoadsidePoles();
 	glPopMatrix();
 
+	//left roadside pole BACK
 	glPushMatrix();
 		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 		glTranslatef(300, 0, -50);
 		drawRoadsidePoles();
 	glPopMatrix();
 
+	//left roadside pole FRONT
 	glPushMatrix();
 		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 		glTranslatef(300, 0, 50);
@@ -150,17 +157,25 @@ void display()
 
 	//Left Bridge
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/street.bmp");
 		glTranslatef(-200.0f, 0.0f, 0.0f);
 		glRotatef(rotateAngle, 0.0f, 0.0f, 1.0f);
 		drawBridge();
+		endTexture();
 	glPopMatrix();
 
 	//Right Bridge
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/street.bmp");
 		glTranslatef(200.0f, 0.0f, 0.0f);
 		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 		glRotatef(rotateAngle, 0.0f, 0.0f, 1.0f);
 		drawBridge();
+		endTexture();
 	glPopMatrix();
 
 	//Right Road
@@ -175,12 +190,34 @@ void display()
 		glTranslatef(500.0f, 0.0f, 0.0f);
 		drawRoad();
 	glPopMatrix();
+
+	//link bridge FRONT
+	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/linkbridge.bmp");
+		drawCuboid(200, 300, 30, 200, 300, 50, 200, 275, 30, 200, 275, 50);
+		endTexture();
+	glPopMatrix();
+
+	//link bridge BACK
+	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/linkbridge.bmp");
+		drawCuboid(200, 300, -50, 200, 300, -30, 200, 275, -50, 200, 275, -30);
+		endTexture();
+	glPopMatrix();
 }
 //--------------------------------------------------------------------
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks) {
 	GLUquadricObj *cylinder = NULL;
 	cylinder = gluNewQuadric();
 	gluQuadricDrawStyle(cylinder, GLU_FILL);
+
+	gluQuadricNormals(cylinder, GLU_SMOOTH);
+	gluQuadricTexture(cylinder, GLU_TRUE);
+
 	gluCylinder(cylinder, baseRadius, topRadius, height, slices, stacks);
 	gluDeleteQuadric(cylinder);
 }
@@ -250,18 +287,18 @@ void drawLine() {
 	glEnd();
 }
 void drawCurve() {
-	float radiusSmile = 400;
+	float radius = 200;
 	float twoPI = 2 * 3.142;
 
-	glPointSize(10.0);
+	glPointSize(5.0);
 	glBegin(GL_POINTS);
-	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);//red
 	for (float i = twoPI / 4; i <= 3 * twoPI / 4; i += 0.001)
 	{
-		glVertex2f((sin(i)*radiusSmile), (cos(i)*radiusSmile) + -0.1);
+		glVertex2f((sin(i)*radius), (cos(i)*radius) + -0.1);
 	}
 	glEnd();
 }
+
 
 void drawPencil() {
 	double baseRadius = 10;
@@ -272,15 +309,23 @@ void drawPencil() {
 	int stacks = 30;
 
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/towercolpil.bmp");
 		glTranslatef(0, 350, 0);
 		glRotatef(90, 1, 0, 0);
 		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
+		endTexture();
 	glPopMatrix();
 
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/towercolpil.bmp");
 		glTranslatef(0, 350, 0);
 		glRotatef(-90, 1, 0, 0);
 		drawCone(baseRadius, coneHeight, slices, stacks);
+		endTexture();
 	glPopMatrix();
 
 }
@@ -294,10 +339,17 @@ void drawTowerBlock() {
 			drawCuboid(-50, 325, 50, -50, 325, -50, -50, 0, 50, -50, 0, -50);
 			endTexture();
 		glPopMatrix();
+
 		//tower dome
 		glPushMatrix();
-			drawCuboid(-10, 370, 10, -10, 370, -10, -50, 325, 50, -50, 325, -50);
+			//glColor3f(0.917647, 0.917647, 0.678431);
+			glColor3f(1.0, 1.0, 1.0);
+			glEnable(GL_TEXTURE_2D);
+			LoadBitmapImage("images/towercolpil.bmp");
+			drawCuboid(-10, 390, 10, -10, 390, -10, -50, 325, 50, -50, 325, -50);
+			endTexture();
 		glPopMatrix();
+
 		//tower roof cube front
 		glPushMatrix();
 			glColor3f(1.0, 1.0, 1.0);
@@ -306,6 +358,7 @@ void drawTowerBlock() {
 			drawCuboid(-25, 350, 50, -20, 350, -50, -25, 325, 50, -25, 325, -50);
 			endTexture();
 		glPopMatrix();
+
 		//tower roof cube side
 		glPushMatrix();
 			glColor3f(1.0, 1.0, 1.0);
@@ -344,53 +397,59 @@ void drawTowerBlock() {
 			glColor3f(1.0, 1.0, 1.0);
 			glEnable(GL_TEXTURE_2D);
 			LoadBitmapImage("images/towerbasepoly.bmp");
-			drawCuboid(-50, 0, 50, -50, 0, -50, -50, -100, 50, -50, -100, -50);
+			drawCuboid(-70, 0, 70, -70, 0, -70, -70, -130, 70, -70, -130, -70);
 			endTexture();
 		glPopMatrix();
 
-		//tower base cyclinder platform front
-		glPushMatrix();
-			glTranslatef(0, 0, -50);
-			glRotatef(90, 1, 0, 0);
-			drawCylinder(50, 50, 100, 30, 30);
-		glPopMatrix();
 
-		//tower base cyclinder platform back
-		glPushMatrix();
-			glTranslatef(0, 0, 50);
-			glRotatef(90, 1, 0, 0);
-			drawCylinder(50, 50, 100, 30, 30);
-		glPopMatrix();
+		////tower base cyclinder platform front
+		//glPushMatrix();
+		//	glTranslatef(0, 0, -50);
+		//	glRotatef(90, 1, 0, 0);
+		//	drawCylinder(50, 50, 100, 30, 30);
+		//glPopMatrix();
+
+		////tower base cyclinder platform back
+		//glPushMatrix();
+		//	glTranslatef(0, 0, 50);
+		//	glRotatef(90, 1, 0, 0);
+		//	drawCylinder(50, 50, 100, 30, 30);
+		//glPopMatrix();
 
 }
 
 void drawRoadsidePoles() {
-	double baseRadius = 10;
-	double topRadius = 10;
-	double cylinderHeight = 200;
+	double baseRadius = 1;
+	double topRadius = 1;
+	double cylinderHeight = 180;
 	int slices = 30;
 	int stacks = 30;
 
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(50, 0, 0);
 		glRotatef(-90, 1, 0, 0);
 		drawCylinder(baseRadius, topRadius, cylinderHeight, slices, stacks);
 	glPopMatrix();
 
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(100, 0, 0);
 		glRotatef(-90, 1, 0, 0);
-		drawCylinder(baseRadius, topRadius, cylinderHeight-50, slices, stacks);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-40, slices, stacks);
 	glPopMatrix();
 
 	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(150, 0, 0);
 		glRotatef(-90, 1, 0, 0);
-		drawCylinder(baseRadius, topRadius, cylinderHeight-100, slices, stacks);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-60, slices, stacks);
 	glPopMatrix();
 
 	glPushMatrix();
-		glTranslatef(400, 400, 0);
+		glColor3f(0.0f, 0.5f, 1.0f);
+		glRotatef(-10, 0.0f, 0.0f, 1);
+		glTranslatef(140, 350, 0);
 		drawCurve();
 	glPopMatrix();
 
@@ -405,15 +464,25 @@ void drawRoadsidePoles() {
 void drawBridge() {
 	//drawCuboid(-100.0f, 5.0f, 50.0f, -100.0f, 5.0f, -50.0f, -100.0f, 0.0f, 50.0f, -100.0f, 0.0f, -50.0f);
 	glBegin(GL_QUADS);
-	glVertex3f(0.0f, 5.0f, 50.0f);
-	glVertex3f(0.0f, 5.0f, -50.f);
-	glVertex3f(200.0f, 5.0f, -50.0f);
-	glVertex3f(200.0f, 5.0f, 50.0f);
+		glTexCoord2f(0, 0);
+			glVertex3f(0.0f, 5.0f, 50.0f);
+		glTexCoord2f(0, 1);
+			glVertex3f(0.0f, 5.0f, -50.f);
+		glTexCoord2f(1, 1);
+			glVertex3f(200.0f, 5.0f, -50.0f);
+		glTexCoord2f(1, 0);
+			glVertex3f(200.0f, 5.0f, 50.0f);
 	glEnd();
 }
 
 void drawRoad() {
-	drawCuboid(-200.0f, 5.0f, 50.0f, -200.0f, 5.0f, -50.0f, -200.0f, 0.0f, 50.0f, -200.0f, 0.0f, -50.0f);
+	glPushMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		LoadBitmapImage("images/street.bmp");
+		drawCuboid(-200.0f, 5.0f, 50.0f, -200.0f, 5.0f, -50.0f, -200.0f, 0.0f, 50.0f, -200.0f, 0.0f, -50.0f);
+		endTexture();
+	glPopMatrix();
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
