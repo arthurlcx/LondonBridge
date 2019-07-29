@@ -287,7 +287,7 @@ void drawLine() {
 	glEnd();
 }
 void drawCurve() {
-	float radius = 200;
+	/*float radius = 200;
 	float twoPI = 2 * 3.142;
 
 	glPointSize(5.0);
@@ -295,6 +295,16 @@ void drawCurve() {
 	for (float i = twoPI / 4; i <= 3 * twoPI / 4; i += 0.001)
 	{
 		glVertex2f((sin(i)*radius), (cos(i)*radius) + -0.1);
+	}
+	glEnd();*/
+
+	glLineWidth(2);
+	glBegin(GL_LINE_STRIP);
+	for (int i = 200; i <= 300; i++)
+	{
+		float x = cos((2 * i*3.14) / 360) * 300;
+		float y = sin((2 * i*3.14) / 360) * 300;
+		glVertex2f(x, y);
 	}
 	glEnd();
 }
@@ -421,7 +431,7 @@ void drawTowerBlock() {
 void drawRoadsidePoles() {
 	double baseRadius = 1;
 	double topRadius = 1;
-	double cylinderHeight = 180;
+	double cylinderHeight = 190;
 	int slices = 30;
 	int stacks = 30;
 
@@ -436,27 +446,23 @@ void drawRoadsidePoles() {
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(100, 0, 0);
 		glRotatef(-90, 1, 0, 0);
-		drawCylinder(baseRadius, topRadius, cylinderHeight-40, slices, stacks);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-60, slices, stacks);
 	glPopMatrix();
 
 	glPushMatrix();
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(150, 0, 0);
 		glRotatef(-90, 1, 0, 0);
-		drawCylinder(baseRadius, topRadius, cylinderHeight-60, slices, stacks);
+		drawCylinder(baseRadius, topRadius, cylinderHeight-90, slices, stacks);
 	glPopMatrix();
 
 	glPushMatrix();
 		glColor3f(0.0f, 0.5f, 1.0f);
 		glRotatef(-10, 0.0f, 0.0f, 1);
-		glTranslatef(140, 350, 0);
+		glTranslatef(240, 400, 0);
 		drawCurve();
 	glPopMatrix();
 
-	//glPushMatrix();
-	//	//glTranslatef(400, 400, 0);
-	//	drawLine();
-	//glPopMatrix();
 
 
 }
