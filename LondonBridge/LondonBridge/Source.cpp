@@ -535,13 +535,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glOrtho(-500, 500, -500, 500, -500, 500);
+	//glOrtho(-500, 500, -500, 500, -500, 500);
 
 
-	//gluPerspective(60, 1, 0.1, 1000);
-
-	//glMatrixMode(GL_MODELVIEW);
-	//glTranslatef(0.0, 0.0, -200);
+	gluPerspective(70, 1, 0.6, 2000);
+	glMatrixMode(GL_MODELVIEW);
+	glTranslatef(0.0, 0.0, -1000);
 
 	while (true)
 	{
