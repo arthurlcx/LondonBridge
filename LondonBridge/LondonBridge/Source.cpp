@@ -19,6 +19,8 @@ void drawBridge();
 void drawRoad();
 
 float rotateAngle = 0.0f;
+float viewDistance = -1000.0f;
+float rotateY = 0.0f;
 
 GLuint texture = 0;
 BITMAP BMP;
@@ -45,6 +47,18 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			if (rotateAngle > 0.0f && rotateAngle <= 60.0f) {
 				rotateAngle -= 1.0f;
 			}
+		}
+		else if (wParam == VK_UP) {
+			viewDistance += 10.0f;
+		}
+		else if (wParam == VK_DOWN) {
+			viewDistance -= 10.0f;
+		}
+		else if (wParam == VK_LEFT) {
+			rotateY -= 10.0f;
+		}
+		else if (wParam == VK_RIGHT) {
+			rotateY += 10.0f;
 		}
 		break;
 
@@ -115,7 +129,10 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	glRotatef(0.05, 1, 1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0, 0.0, viewDistance);
+	glRotatef(rotateY, 0, 1, 0);
 
 	//left tower
 	glPushMatrix();
@@ -210,6 +227,7 @@ void display()
 	glPopMatrix();
 }
 //--------------------------------------------------------------------
+
 void drawCylinder(double baseRadius, double topRadius, double height, int slices, int stacks) {
 	GLUquadricObj *cylinder = NULL;
 	cylinder = gluNewQuadric();
@@ -539,8 +557,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 
 	gluPerspective(70, 1, 0.6, 2000);
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0.0, 0.0, -1000);
+	
 
 	while (true)
 	{
